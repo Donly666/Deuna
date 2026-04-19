@@ -173,194 +173,193 @@ function DashboardScreen({ onBack }: { onBack: () => void }) {
 
   return (
     <>
-      {/* Status Bar */}
-      <StatusBar />
+      {/* ── Status Bar ── */}
+      {!showSaldo && <StatusBar />}
 
-      {bottomTab === 'ia' ? (
+      {/* ── Contenido Principal ── */}
+      {showSaldo ? (
+        <div className="flex flex-col flex-1 overflow-hidden" style={{ backgroundColor: '#F5F4F0' }}>
+          <MisCuentitas
+            data={mockMisCuentitas}
+            onClose={() => setShowSaldo(false)}
+            onOpenChat={() => {
+              setShowSaldo(false);
+              setBottomTab('ia');
+            }}
+          />
+        </div>
+      ) : bottomTab === 'ia' ? (
         <ChatbotView />
       ) : (
-        <>
+        <div className="flex flex-col flex-1 overflow-hidden">
           {/* Header */}
-          <div className="px-5 pt-2 pb-0">
-        <div className="flex items-center justify-between">
-          {/* Perfil */}
-          <div className="flex items-center gap-2.5">
-            <button
-              onClick={onBack}
-              className="w-9 h-9 bg-[#4C1D80] rounded-lg flex items-center justify-center shrink-0"
-            >
-              <HomeIcon />
-            </button>
-            <div className="min-w-0">
-              <div className="flex items-center gap-1.5">
-                <span className="text-[15px] font-bold text-[#1a1a1a] truncate">Hola! Jervin</span>
-                <span className="bg-[#4C1D80] text-white text-[9px] font-bold px-2 py-[1px] rounded">
-                  Admin
-                </span>
+          <div className="px-5 pt-2 pb-0 shrink-0">
+            <div className="flex items-center justify-between">
+              {/* Perfil */}
+              <div className="flex items-center gap-2.5">
+                <button
+                  onClick={onBack}
+                  className="w-9 h-9 bg-[#4C1D80] rounded-lg flex items-center justify-center shrink-0"
+                >
+                  <HomeIcon />
+                </button>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[15px] font-bold text-[#1a1a1a] truncate">Hola! Jervin</span>
+                    <span className="bg-[#4C1D80] text-white text-[9px] font-bold px-2 py-[1px] rounded">
+                      Admin
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-gray-400 truncate">Intriago Andrade Jervin...</p>
+                </div>
               </div>
-              <p className="text-[11px] text-gray-400 truncate">Intriago Andrade Jervin...</p>
+              {/* Acciones */}
+              <div className="flex items-center gap-3">
+                <button className="text-[#4C1D80]">
+                  <QrSmallIcon />
+                </button>
+                <button className="text-[#4C1D80] relative">
+                  <BellIcon />
+                </button>
+                <button className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                  <UserIcon />
+                </button>
+              </div>
+            </div>
+
+            {/* Tabs Cobrar / Gestionar */}
+            <div className="flex mt-4 border-b border-gray-100">
+              {(['cobrar', 'gestionar'] as const).map(t => (
+                <button
+                  key={t}
+                  onClick={() => setTab(t)}
+                  className={`flex-1 pb-3 text-[14px] font-semibold transition-colors relative ${
+                    tab === t ? 'text-[#4C1D80]' : 'text-gray-400'
+                  }`}
+                >
+                  {t === 'cobrar' ? 'Cobrar' : 'Gestionar'}
+                  {tab === t && (
+                    <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#4C1D80] rounded-t-full" />
+                  )}
+                </button>
+              ))}
             </div>
           </div>
-          {/* Acciones */}
-          <div className="flex items-center gap-3">
-            <button className="text-[#4C1D80]">
-              <QrSmallIcon />
-            </button>
-            <button className="text-[#4C1D80] relative">
-              <BellIcon />
-            </button>
-            <button className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-              <UserIcon />
-            </button>
-          </div>
-        </div>
 
-        {/* Tabs Cobrar / Gestionar */}
-        <div className="flex mt-4 border-b border-gray-100">
-          {(['cobrar', 'gestionar'] as const).map(t => (
-            <button
-              key={t}
-              onClick={() => setTab(t)}
-              className={`flex-1 pb-3 text-[14px] font-semibold transition-colors relative ${
-                tab === t ? 'text-[#4C1D80]' : 'text-gray-400'
-              }`}
-            >
-              {t === 'cobrar' ? 'Cobrar' : 'Gestionar'}
-              {tab === t && (
-                <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#4C1D80] rounded-t-full" />
-              )}
-            </button>
-          ))}
-        </div>
-      </div>
+          {/* Contenido del tab */}
+          {tab === 'cobrar' ? (
+            <div className="flex flex-col flex-1 px-5 overflow-hidden">
+              {/* Monto */}
+              <div className="text-center mt-6 mb-4">
+                <p className="text-[#4C1D80] text-[13px] font-medium mb-1">Monto</p>
+                <p className="text-[48px] font-bold text-[#1a1a1a] leading-none tracking-tight">
+                  $ {amount}
+                </p>
+              </div>
 
-      {/* Contenido del tab */}
-      {tab === 'cobrar' ? (
-        <div className="flex flex-col flex-1 px-5">
-          {/* Monto */}
-          <div className="text-center mt-6 mb-4">
-            <p className="text-[#4C1D80] text-[13px] font-medium mb-1">Monto</p>
-            <p className="text-[48px] font-bold text-[#1a1a1a] leading-none tracking-tight">
-              $ {amount}
-            </p>
-          </div>
+              {/* Toggle QR / Manual */}
+              <div className="flex bg-[#F4F4F6] rounded-full p-[3px] mx-auto w-[220px] mb-4">
+                {(['qr', 'manual'] as const).map(m => (
+                  <button
+                    key={m}
+                    onClick={() => setPayMode(m)}
+                    className={`flex-1 py-2.5 text-[13px] rounded-full transition-all font-semibold ${
+                      payMode === m
+                        ? 'bg-[#4C1D80] text-white shadow-sm'
+                        : 'text-gray-400'
+                    }`}
+                  >
+                    {m === 'qr' ? 'QR' : 'Manual'}
+                  </button>
+                ))}
+              </div>
 
-          {/* Toggle QR / Manual */}
-          <div className="flex bg-[#F4F4F6] rounded-full p-[3px] mx-auto w-[220px] mb-4">
-            {(['qr', 'manual'] as const).map(m => (
+              {/* Agregar motivo */}
+              <button className="flex items-center justify-between w-full py-3 border-b border-gray-100 mb-2">
+                <span className="text-[13px] text-gray-400">Agregar motivo (opcional)</span>
+                <ChevronRightIcon />
+              </button>
+
+              {/* Teclado numérico */}
+              <div className="grid grid-cols-3 gap-y-1 mt-2 flex-1 content-center">
+                {['1','2','3','4','5','6','7','8','9',',','0','del'].map(key => (
+                  <button
+                    key={key}
+                    onClick={() => handleKey(key)}
+                    className="flex items-center justify-center py-3.5 rounded-xl text-[28px] font-semibold text-[#4C1D80] active:bg-gray-100 transition-colors"
+                  >
+                    {key === 'del' ? <BackspaceIcon /> : key}
+                  </button>
+                ))}
+              </div>
+
+              {/* CTA */}
               <button
-                key={m}
-                onClick={() => setPayMode(m)}
-                className={`flex-1 py-2.5 text-[13px] rounded-full transition-all font-semibold ${
-                  payMode === m
-                    ? 'bg-[#4C1D80] text-white shadow-sm'
-                    : 'text-gray-400'
+                className={`w-full py-4 rounded-[14px] text-[16px] font-bold transition-all mt-2 mb-1 shrink-0 ${
+                  hasAmount
+                    ? 'bg-[#4C1D80] text-white active:scale-[0.98]'
+                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                 }`}
+                disabled={!hasAmount}
               >
-                {m === 'qr' ? 'QR' : 'Manual'}
+                Continuar para Cobrar
               </button>
-            ))}
-          </div>
-
-          {/* Agregar motivo */}
-          <button className="flex items-center justify-between w-full py-3 border-b border-gray-100 mb-2">
-            <span className="text-[13px] text-gray-400">Agregar motivo (opcional)</span>
-            <ChevronRightIcon />
-          </button>
-
-          {/* Teclado numérico */}
-          <div className="grid grid-cols-3 gap-y-1 mt-2 flex-1 content-center">
-            {['1','2','3','4','5','6','7','8','9',',','0','del'].map(key => (
+            </div>
+          ) : (
+            /* ── Tab Gestionar ── */
+            <div className="flex flex-col flex-1 px-5 overflow-y-auto pb-4">
+              {/* Mi Saldo */}
               <button
-                key={key}
-                onClick={() => handleKey(key)}
-                className="flex items-center justify-center py-3.5 rounded-xl text-[28px] font-semibold text-[#4C1D80] active:bg-gray-100 transition-colors"
+                onClick={() => setShowSaldo(true)}
+                className="bg-[#F8F8FA] rounded-2xl p-5 mt-5 mb-6 flex items-center justify-between border border-gray-100 w-full text-left shrink-0"
               >
-                {key === 'del' ? <BackspaceIcon /> : key}
+                <div>
+                  <p className="text-gray-500 text-[13px] font-medium mb-1">Mis Cuentitas</p>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[32px] font-bold text-[#1a1a1a] leading-none">$0,80</span>
+                    <span className="text-gray-400">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+                <ChevronRightIcon />
               </button>
-            ))}
-          </div>
 
-          {/* CTA */}
-          <button
-            className={`w-full py-4 rounded-[14px] text-[16px] font-bold transition-all mt-2 mb-1 ${
-              hasAmount
-                ? 'bg-[#4C1D80] text-white active:scale-[0.98]'
-                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-            }`}
-            disabled={!hasAmount}
-          >
-            Continuar para Cobrar
-          </button>
+              {/* Accesos rápidos */}
+              <h3 className="text-[16px] font-bold text-[#1a1a1a] mb-4 shrink-0">Accesos rápidos</h3>
+              <div className="grid grid-cols-4 gap-3 mb-6 shrink-0">
+                <QuickAction icon={<ArrowDownIcon />} label="Recargar saldo" />
+                <QuickAction icon={<ArrowUpIcon />} label="Transferir saldo" />
+                <QuickAction icon={<DollarIcon />} label="Venta Manual" />
+                <QuickAction icon={<VerifyIcon />} label="Verificar pago" />
+              </div>
+
+              {/* Novedades */}
+              <h3 className="text-[16px] font-bold text-[#1a1a1a] mb-4 shrink-0">Novedades Deuna Negocios</h3>
+              <div className="flex gap-3 shrink-0">
+                <div className="flex-1 bg-[#F8F8FA] rounded-2xl p-4 border border-gray-100 flex flex-col justify-between min-h-[140px]">
+                  <p className="text-[13px] font-semibold text-[#1a1a1a] leading-snug">
+                    Agrega vendedores<br />a tu equipo
+                  </p>
+                  <div className="w-9 h-9 bg-[#0d9b7a] rounded-lg flex items-center justify-center mt-3">
+                    <span className="text-white font-black text-sm italic">d!</span>
+                  </div>
+                </div>
+                <div className="flex-1 bg-[#F8F8FA] rounded-2xl p-4 border border-gray-100 flex flex-col justify-between min-h-[140px]">
+                  <p className="text-[13px] font-semibold text-[#1a1a1a] leading-snug">
+                    Administra<br />tus ventas<br />con tu caja
+                  </p>
+                  <div className="w-9 h-9 bg-[#0d9b7a] rounded-lg flex items-center justify-center mt-3">
+                    <span className="text-white font-black text-sm italic">d!</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
-      ) : (
-        /* ── Tab Gestionar ── */
-        <div className="flex flex-col flex-1 px-5 overflow-y-auto">
-
-          {/* Mi Saldo */}
-          <button
-            onClick={() => setShowSaldo(true)}
-            className="bg-[#F8F8FA] rounded-2xl p-5 mt-5 mb-6 flex items-center justify-between border border-gray-100 w-full text-left"
-          >
-            <div>
-              <p className="text-gray-500 text-[13px] font-medium mb-1">Mis Cuentitas</p>
-              <div className="flex items-center gap-2">
-                <span className="text-[32px] font-bold text-[#1a1a1a] leading-none">$0,80</span>
-                <span className="text-gray-400">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                    <circle cx="12" cy="12" r="3" />
-                  </svg>
-                </span>
-              </div>
-            </div>
-            <ChevronRightIcon />
-          </button>
-
-          {/* Accesos rápidos */}
-          <h3 className="text-[16px] font-bold text-[#1a1a1a] mb-4">Accesos rápidos</h3>
-          <div className="grid grid-cols-4 gap-3 mb-6">
-            <QuickAction icon={<ArrowDownIcon />} label="Recargar saldo" />
-            <QuickAction icon={<ArrowUpIcon />} label="Transferir saldo" />
-            <QuickAction icon={<DollarIcon />} label="Venta Manual" />
-            <QuickAction icon={<VerifyIcon />} label="Verificar pago" />
-          </div>
-
-          {/* Novedades */}
-          <h3 className="text-[16px] font-bold text-[#1a1a1a] mb-4">Novedades Deuna Negocios</h3>
-          <div className="flex gap-3">
-            <div className="flex-1 bg-[#F8F8FA] rounded-2xl p-4 border border-gray-100 flex flex-col justify-between min-h-[140px]">
-              <p className="text-[13px] font-semibold text-[#1a1a1a] leading-snug">
-                Agrega vendedores<br />a tu equipo
-              </p>
-              <div className="w-9 h-9 bg-[#0d9b7a] rounded-lg flex items-center justify-center mt-3">
-                <span className="text-white font-black text-sm italic">d!</span>
-              </div>
-            </div>
-            <div className="flex-1 bg-[#F8F8FA] rounded-2xl p-4 border border-gray-100 flex flex-col justify-between min-h-[140px]">
-              <p className="text-[13px] font-semibold text-[#1a1a1a] leading-snug">
-                Administra<br />tus ventas<br />con tu caja
-              </p>
-              <div className="w-9 h-9 bg-[#0d9b7a] rounded-lg flex items-center justify-center mt-3">
-                <span className="text-white font-black text-sm italic">d!</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-      </>
-      )}
-
-      {/* ── Vista Mis Cuentitas (overlay) ── */}
-      {showSaldo && (
-        <MisCuentitas
-          data={mockMisCuentitas}
-          onClose={() => setShowSaldo(false)}
-          onOpenChat={() => {
-            setShowSaldo(false);
-            setBottomTab('ia');
-          }}
-        />
       )}
 
       {/* Bottom Navigation */}
